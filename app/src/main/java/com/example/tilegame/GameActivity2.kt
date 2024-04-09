@@ -1,6 +1,7 @@
 package com.example.tilegame
 
 import android.animation.AnimatorInflater
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -50,11 +51,13 @@ class GameActivity2 : AppCompatActivity() {
     }
 
     private fun selectRandomTiles(count: Int, gridView: GridView) {
+
+
         selectedTiles = mutableListOf()
         val random = Random()
         val totalTiles = gridView.childCount
         val selectedIndices = mutableSetOf<Int>()
-
+        selectedTiles.clear()
         repeat(count) {
             var randomIndex: Int
             do {
@@ -89,6 +92,9 @@ class GameActivity2 : AppCompatActivity() {
 
 
     private fun startTimer() {
+
+
+
         // Initialize userSelectedTiles if not initialized
         if (!::userSelectedTiles.isInitialized) {
             userSelectedTiles = mutableListOf()
@@ -97,20 +103,17 @@ class GameActivity2 : AppCompatActivity() {
         // Wait for 5 seconds
         Handler().postDelayed({
             // Check if user selected tiles match random tiles
-            if (::userSelectedTiles.isInitialized && selectedTiles.containsAll(selectedTiles) && selectedTiles.containsAll(selectedTiles)) {
+            if (::userSelectedTiles.isInitialized && userSelectedTiles.containsAll(selectedTiles) && selectedTiles.containsAll(userSelectedTiles)) {
                 // Match found
                 score += if (roundsCompleted <= 3) 10 else 20
                 roundsCompleted++
                 Toast.makeText(this, "Tiles Match! Score: $score", Toast.LENGTH_SHORT).show()
                 Log.d("TAG", "user: $userSelectedTiles")
 
-                if(roundsCompleted>3){
+                if(roundsCompleted >= 3){
                     selectRandomTiles(5, gridView)
-
-                }
-                else{
+                } else{
                     selectRandomTiles(4, gridView)
-
                 }
 
             } else {
@@ -118,9 +121,28 @@ class GameActivity2 : AppCompatActivity() {
                 Toast.makeText(this, "Tiles Do Not Match! Score: $score", Toast.LENGTH_SHORT).show()
                 Log.d("TAG", "user: $userSelectedTiles")
                 continueGame = false
+
+                // Save the score to a file
+                saveScoreToFile(score)
             }
+            userSelectedTiles.clear()
         }, 5000)
     }
+
+    private fun saveScoreToFile(score: Int) {
+        try {
+            // Open a file for writing in append mode
+            val outputStream = openFileOutput("score.txt", Context.MODE_APPEND)
+            // Write the score followed by a newline character
+            outputStream.write("$score\n".toByteArray())
+            outputStream.close()
+            Log.d("TAG", "Score saved to file.")
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Log.e("TAG", "Error saving score to file: ${e.message}")
+        }
+    }
+
 
     fun onTileClicked(view: View) {
         if (view is Button) {
