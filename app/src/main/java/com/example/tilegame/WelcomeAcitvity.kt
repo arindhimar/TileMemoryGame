@@ -1,6 +1,8 @@
 package com.example.tilegame
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
 import android.widget.EditText
@@ -39,8 +41,17 @@ class WelcomeAcitvity : AppCompatActivity() {
     }
 
     private fun sendDialogDataToActivity(data: String) {
-        Toast.makeText(this, data, Toast.LENGTH_SHORT).show()
-        val intent = Intent(this,GameActivity::class.java)
+        if(data.isNotEmpty())
+        {
+            Toast.makeText(this, data, Toast.LENGTH_SHORT).show()
+            val sp = getSharedPreferences("userData",Context.MODE_PRIVATE)
+            val temp = sp.edit()
+            temp.putString("name",data)
+            temp.apply()
+        }
+
+        val intent = Intent(this,GameActivity2::class.java)
         startActivity(intent)
+        finish()
     }
 }

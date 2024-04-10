@@ -6,7 +6,8 @@
     android:text=""
     android:padding="10dp"
     android:layout_margin="2dp"
-    android:background="@color/teal_700"
-    android:textColor="@android:color/black"
+
+    android:textColor="@android:color/white"
     android:textSize="16sp"
+    style="?attr/materialButtonOutlinedStyle"
     android:gravity="center"/>
