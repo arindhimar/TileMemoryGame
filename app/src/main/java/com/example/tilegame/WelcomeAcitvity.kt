@@ -43,7 +43,7 @@ class WelcomeAcitvity : AppCompatActivity() {
     private fun sendDialogDataToActivity(data: String) {
         if(data.isNotEmpty())
         {
-            Toast.makeText(this, data, Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Welcome $data!!", Toast.LENGTH_SHORT).show()
             val sp = getSharedPreferences("userData",Context.MODE_PRIVATE)
             val temp = sp.edit()
             temp.putString("name",data)
